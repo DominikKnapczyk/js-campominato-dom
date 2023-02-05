@@ -4,15 +4,13 @@ const generaGriglia = document.getElementById("genera-griglia"); // Prende l'ele
 const grigliaGioco = document.getElementById("gioco"); // Prende l'elemento HTML con id "gioco", che sarà la sezione dove verrà generata la griglia.
 const difficolta = document.getElementById("difficolta"); // Prende l'elemento HTML con id "difficolta", che sarà la select per la selezione della difficoltà.
 
-
-
 // CLICK SUL PULSANTE PER GENERARE LA GRIGLIA
 generaGriglia.addEventListener("click", function() { // Evento "click" sul pulsante "genera-griglia": viene aggiunto un evento "click" che esegue la funzione seguente:
   
   // RESET GRIGLIA
   grigliaGioco.innerHTML = "";   // Resetta il contenuto delle cella del gioco, cioè elimina tutte le celle generate in precedenza
 
-  // RISULTATO DELLA PARTITA
+  // VARIABILI RISULTATO E PUNTEGGIO DELLA PARTITA
   var risultato = null;
   var punteggio = 0;
 
@@ -43,7 +41,6 @@ generaGriglia.addEventListener("click", function() { // Evento "click" sul pulsa
     }
     arrayBombe.push(numeroCasuale)
   }
-  console.log(arrayBombe);
 
   // GENERA GRIGLIA
   // Generazione della griglia: viene effettuato un ciclo "for" per generare le righe della griglia. In ogni iterazione, viene generata una riga e viene eseguito un altro ciclo "for" per generare le caselle per la riga corrente.
@@ -66,37 +63,39 @@ generaGriglia.addEventListener("click", function() { // Evento "click" sul pulsa
       cella.style.textAlign = "center";
       cella.style.lineHeight = "60px";
       cella.innerHTML = (i - 1) * numeroRighe + j; // Numero da visualizzare in ogni cella.
-      cella.id = (i - 1) * numeroRighe + j; // id della cella
+      cella.id = (i - 1) * numeroRighe + j; // Id della cella.
       
-      cella.addEventListener("click", function() { // Gestisce l'evento click su ogni cella. Quando l'utente clicca su una cella, questa viene colorata di azzurro (cella.style.backgroundColor = "lightblue";) e viene stampato il suo valore nella console (console.log(cella.innerHTML);).
+      cella.addEventListener("click", function() { // Gestisce l'evento click su ogni cella. Quando l'utente clicca su una cella.
         
-        if (risultato == null) {
-
         // VERIFICA DELLA VITTORIA 
-        numeroCelleCliccate += 1;
-        console.log(numeroCelleCliccate);
-        if (numeroCelleCliccate == (numeroCaselle - 16)) {
-          risultato = true;
-          alert("Hai Vinto!")
-        }
+        if (risultato == null) { // Si verifica se la partita è ancora in corso, rendendo le celle interagibili.
 
-        let numeroCella = parseInt(cella.innerHTML);
-        console.log(numeroCella);
-        console.log(arrayBombe);
-        if (arrayBombe.includes(numeroCella)) {
-        risultato = false;
-        for (let z = 0; z < 16; z++) {
-          let numeroBomba = arrayBombe[z];
-          console.log(numeroBomba);
-          document.getElementById(numeroBomba).style.backgroundColor = "red";
+          let numeroCella = parseInt(cella.innerHTML); // Input del numero della cella con cui ha interagito l'utente.
+          numeroCelleCliccate += 1; // Contatore del punteggio.
 
-        }
-       
-        alert("Hai perso! Hai fatto " + punteggio + " punti")
-        } else {
-        cella.style.backgroundColor = "lightblue";
-        punteggio += 1;
-        }
+          // SE VENGONO SCOPERTE TUTTE LE CASELLE SENZA BOMBE
+          if (numeroCelleCliccate == (numeroCaselle - 16)) {
+            risultato = true;
+            alert("Hai Vinto!")
+          }
+
+          // SE VIENE SCOPERTA UNA CASELLA CON LA BOMBA
+          if (arrayBombe.includes(numeroCella)) {
+            
+            risultato = false;
+
+            for (let z = 0; z < 16; z++) { // Si mostrano tutte le bombe.
+              let numeroBomba = arrayBombe[z];
+              document.getElementById(numeroBomba).style.backgroundColor = "red";
+            }
+
+            alert("Hai perso! Hai fatto " + punteggio + " punti")
+
+            // SE VIENE SCOPERTA UNA CASELLA VUOTA
+          } else {
+            cella.style.backgroundColor = "lightblue";
+            punteggio += 1;
+          }
         }
      
       });
